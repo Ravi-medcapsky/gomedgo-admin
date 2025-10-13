@@ -6,7 +6,7 @@ import { PiGreaterThanBold } from "react-icons/pi";
 const HeroSection = ({ title, title2 }) => {
   return (
     <div>
-      <div className="w-full h-55 bg-green-300 rounded-b-xl">
+      <div className="w-full h-55 bg-green-400 rounded-b-xl">
         <div className="w-full h-8 bg-gray-900 ">
           <h1 className="text-white flex p-1 gap-2">Notifications</h1>
         </div>

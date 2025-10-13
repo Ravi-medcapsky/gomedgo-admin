@@ -11,6 +11,10 @@ const Manager = () => {
   const [statusFilter, setStatusFilter] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // ✅ Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 5;
+
   // ✅ Dummy data (replace with API later)
   const membersData = [
     {
@@ -77,6 +81,22 @@ const Manager = () => {
     setFilteredMembers(filtered);
   }, [searchQuery, statusFilter, members]);
 
+  // Pagination logic
+  const totalPages = Math.ceil(filteredMembers.length / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const paginatedData = filteredMembers.slice(
+    startIndex,
+    startIndex + rowsPerPage
+  );
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
+
+  const handlePrev = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+
   return (
     <div className="w-full">
       {/* Header Section */}
@@ -90,8 +110,7 @@ const Manager = () => {
           <div className="flex flex-wrap gap-6">
             <label
               htmlFor="Search"
-              className="flex items-center gap-2 text-gray-700"
-            >
+              className="flex items-center gap-2 text-gray-700">
               <span className="font-medium">Search:</span>
               <input
                 type="text"
@@ -106,16 +125,14 @@ const Manager = () => {
 
             <label
               htmlFor="Status"
-              className="flex items-center gap-2 text-gray-700"
-            >
+              className="flex items-center gap-2 text-gray-700">
               <span className="font-medium">Status:</span>
               <select
                 id="Status"
                 name="Status"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-              >
+                className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
                 <option value="">All</option>
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
@@ -142,75 +159,98 @@ const Manager = () => {
               No members found.
             </div>
           ) : (
-            <table className="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-              <thead className="bg-gray-100 text-gray-700 text-sm uppercase">
-                <tr>
-                  <th className="py-3 px-5 text-left border-b border-gray-200">
-                    ID
-                  </th>
-                  <th className="py-3 px-5 text-left border-b border-gray-200">
-                    Name
-                  </th>
-                  <th className="py-3 px-5 text-left border-b border-gray-200">
-                    Email
-                  </th>
-                  <th className="py-3 px-5 text-left border-b border-gray-200">
-                    Status
-                  </th>
-                  <th className="py-3 px-5 text-left border-b border-gray-200">
-                    Created At
-                  </th>
-                  <th className="py-3 px-5 text-center border-b border-gray-200">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="text-sm text-gray-700">
-                {filteredMembers.map((member, i) => (
-                  <tr
-                    key={i}
-                    className={`${
-                      i % 2 === 0 ? "bg-white" : "bg-gray-100"
-                    } hover:bg-blue-50 transition`}
-                  >
-                    <td className="py-3 px-5 border-b border-gray-200">
-                      {member.id}
-                    </td>
-                    <td className="py-3 px-5 border-b border-gray-200">
-                      {member.name}
-                    </td>
-                    <td className="py-3 px-5 border-b border-gray-200">
-                      {member.email}
-                    </td>
-
-                    <td className="py-3 px-5 border-b border-gray-200">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          member.status === "Active"
-                            ? "bg-green-100 text-green-700"
-                            : member.status === "Pending"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : "bg-gray-100 text-gray-700"
-                        }`}
-                      >
-                        {member.status}
-                      </span>
-                    </td>
-                    <td className="py-3 px-5 border-b border-gray-200">
-                      {member.createdAt || "N/A"}
-                    </td>
-                    <td className="py-3 px-5 text-center border-b border-gray-200">
-                      <button
-                        className="bg-blue-500 p-2 rounded-full text-white  mr-3"
-                        onClick={() => alert("Not implemented yet!")}
-                      >
-                        <IoPersonSharp size={14} />
-                      </button>
-                    </td>
+            <>
+              <table className="min-w-full border border-gray-200 rounded-lg overflow-hidden">
+                <thead className="bg-gray-100 text-gray-700 text-sm uppercase">
+                  <tr>
+                    <th className="py-3 px-5 text-left border-b border-gray-200">
+                      ID
+                    </th>
+                    <th className="py-3 px-5 text-left border-b border-gray-200">
+                      Name
+                    </th>
+                    <th className="py-3 px-5 text-left border-b border-gray-200">
+                      Email
+                    </th>
+                    <th className="py-3 px-5 text-left border-b border-gray-200">
+                      Status
+                    </th>
+                    <th className="py-3 px-5 text-left border-b border-gray-200">
+                      Created At
+                    </th>
+                    <th className="py-3 px-5 text-center border-b border-gray-200">
+                      Actions
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="text-sm text-gray-700">
+                  {filteredMembers.map((member, i) => (
+                    <tr
+                      key={i}
+                      className={`${
+                        i % 2 === 0 ? "bg-white" : "bg-gray-100"
+                      } hover:bg-blue-50 transition`}>
+                      <td className="py-3 px-5 border-b border-gray-200">
+                        {member.id}
+                      </td>
+                      <td className="py-3 px-5 border-b border-gray-200">
+                        {member.name}
+                      </td>
+                      <td className="py-3 px-5 border-b border-gray-200">
+                        {member.email}
+                      </td>
+
+                      <td className="py-3 px-5 border-b border-gray-200">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            member.status === "Active"
+                              ? "bg-green-100 text-green-700"
+                              : member.status === "Pending"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : "bg-gray-100 text-gray-700"
+                          }`}>
+                          {member.status}
+                        </span>
+                      </td>
+                      <td className="py-3 px-5 border-b border-gray-200">
+                        {member.createdAt || "N/A"}
+                      </td>
+                      <td className="py-3 px-5 text-center border-b border-gray-200">
+                        <button
+                          className="bg-blue-500 p-2 rounded-full text-white  mr-3"
+                          onClick={() => alert("Not implemented yet!")}>
+                          <IoPersonSharp size={14} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {/* Pagination Controls */}
+              <div className="flex justify-between items-center mt-4">
+                <button
+                  onClick={handlePrev}
+                  disabled={currentPage === 1}
+                  className={`px-4 py-2 rounded-md ${
+                    currentPage === 1
+                      ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                      : "bg-blue-500 text-white hover:bg-blue-600"
+                  }`}>
+                  Previous
+                </button>
+
+                <span className="text-sm text-gray-700">
+                  Page {currentPage} of {totalPages}
+                </span>
+
+                <button
+                  onClick={handleNext}
+                  disabled={currentPage === totalPages}
+                  className={`px-4 py-2 rounded-md $ { currentPage === totalPages ? "bg-gray-200 text-gray-500 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"}`}>
+                  Next
+                </button>
+              </div>
+            </>
           )}
         </div>
       </div>

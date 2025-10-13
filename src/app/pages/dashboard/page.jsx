@@ -66,6 +66,14 @@ const Dashboard = () => {
       footerNo: "6",
       color: "yellow",
     },
+    {
+      title: "Active Providers",
+      value: 0,
+      subtitle: "Providers",
+      footer: "completed",
+      footerNo: "6",
+      color: "green",
+    },
   ];
 
   return (
@@ -84,10 +92,28 @@ const Dashboard = () => {
 
           {/* Stats Card */}
           <div className="bg-white p-6 rounded-lg shadow-md mt-6 md:mt-0 md:w-80 w-full">
-            <h2 className="text-lg font-semibold text-center">Total Users</h2>
-            <p className="text-3xl font-bold pt-2 text-center text-blue-500">
-              0
-            </p>
+            <div className="flex justify-between">
+              {/* total Users  */}
+              <div>
+                <h2 className="text-lg font-semibold text-center">
+                  Total Users
+                </h2>
+                <p className="text-3xl font-bold pt-2 text-center text-blue-500">
+                  0
+                </p>
+              </div>
+
+              {/* total providers */}
+              <div>
+                <h2 className="text-lg font-semibold text-center">
+                  Total Providers
+                </h2>
+                <p className="text-3xl font-bold pt-2 text-center text-blue-500">
+                  0
+                </p>
+              </div>
+            </div>
+
             <div className="border-b border-gray-300 mt-3" />
             <div className="flex justify-between pt-4">
               {stats.map((item, i) => (
@@ -116,8 +142,7 @@ const Dashboard = () => {
               step === 1
                 ? "border-b-2 border-violet-400 text-violet-400 font-semibold"
                 : "hover:text-violet-400"
-            }`}
-          >
+            }`}>
             Home
           </button>
           <button
@@ -126,8 +151,7 @@ const Dashboard = () => {
               step === 2
                 ? "border-b-2 border-violet-400 text-violet-400 font-semibold"
                 : "hover:text-violet-400"
-            }`}
-          >
+            }`}>
             Insights
           </button>
         </div>
