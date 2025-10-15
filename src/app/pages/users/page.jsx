@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import HeroSection from "@/app/component/HeroSection";
 import { IoPersonSharp } from "react-icons/io5";
+import { useRouter } from "next/navigation";
 
 const Users = () => {
   const [members, setMembers] = useState([]);
@@ -9,6 +10,8 @@ const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const router = useRouter();
 
   // ✅ Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -246,7 +249,9 @@ const Users = () => {
                       <td className="py-3 px-5 text-center border-b border-gray-200">
                         <button
                           className="bg-blue-500 p-2 rounded-full text-white mr-3 hover:bg-blue-600"
-                          onClick={() => alert("Not implemented yet!")}>
+                          onClick={() =>
+                            router.push(`/component/UsersProfile`)
+                          }>
                           <IoPersonSharp size={14} />
                         </button>
                       </td>

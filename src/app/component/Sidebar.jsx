@@ -52,8 +52,8 @@ const Sidebar = () => {
     },
     {
       id: 6,
-      name: "Trading Account",
-      link: "/pages/tradingAccount",
+      name: "Services",
+      link: "/pages/services",
       icon: <MdTrendingUp />,
     },
     {

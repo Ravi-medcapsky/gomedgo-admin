@@ -34,7 +34,7 @@ const Provider = () => {
       name: "Jane Smith",
       mobileNO: "123-456-7890",
       email: "jane@gmail.com",
-      status: "Pending",
+      status: "Active",
       kyc: "kycPending",
       createdAt: "2023-09-15",
     },
@@ -70,7 +70,7 @@ const Provider = () => {
       name: "Ravi Sharma",
       mobileNO: "555-222-1111",
       email: "ravi@gmail.com",
-      status: "Pending",
+      status: "Inactive",
       kyc: "kycPending",
       createdAt: "2023-06-25",
     },
@@ -271,7 +271,7 @@ const Provider = () => {
                           className={`px-2 py-1 rounded-full text-xs font-medium ${
                             member.status === "Active"
                               ? "bg-green-100 text-green-700"
-                              : member.status === "Pending"
+                              : member.status === "Inactive"
                               ? "bg-yellow-100 text-yellow-700"
                               : "bg-gray-100 text-gray-700"
                           }`}>
@@ -285,7 +285,7 @@ const Provider = () => {
                         <button
                           className="bg-blue-500 p-2 rounded-full text-white hover:bg-blue-600"
                           onClick={() =>
-                            router.push(`/component/DetailsPage?type=provider`)
+                            router.push(`/component/ProvidersProfile`)
                           }>
                           <IoPersonSharp size={14} />
                         </button>
