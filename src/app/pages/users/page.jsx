@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import HeroSection from "@/app/componenet/HeroSection";
+import HeroSection from "@/app/component/HeroSection";
 import { IoPersonSharp } from "react-icons/io5";
 
 const Users = () => {
@@ -30,7 +30,7 @@ const Users = () => {
       mobileNO: "123-456-7890",
       zipcode: "560001",
       email: "jane@gmail.com",
-      status: "Pending",
+      status: "Active",
     },
     {
       id: 3,
@@ -62,7 +62,7 @@ const Users = () => {
       mobileNO: "555-222-1111",
       zipcode: "560001",
       email: "ravi@gmail.com",
-      status: "Pending",
+      status: "Inactive",
     },
     {
       id: 7,
@@ -162,7 +162,6 @@ const Users = () => {
                 <option value="">All</option>
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
-                <option value="Pending">Pending</option>
               </select>
             </label>
           </div>
@@ -236,8 +235,6 @@ const Users = () => {
                           className={`px-2 py-1 rounded-full text-xs font-medium ${
                             member.status === "Active"
                               ? "bg-green-100 text-green-700"
-                              : member.status === "Pending"
-                              ? "bg-yellow-100 text-yellow-700"
                               : "bg-gray-100 text-gray-700"
                           }`}>
                           {member.status}

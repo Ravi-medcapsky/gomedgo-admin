@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import HeroSection from "@/app/componenet/HeroSection";
+import HeroSection from "@/app/component/HeroSection";
 import { FaPersonCirclePlus } from "react-icons/fa6";
 import { IoPersonSharp } from "react-icons/io5";
 

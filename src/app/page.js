@@ -1,7 +1,3 @@
-import Image from "next/image";
-import Header from "./componenet/Header";
-import Sidebar from "./componenet/Sidebar";
-
 export default function Home() {
   return (
     <div>

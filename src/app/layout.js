@@ -1,9 +1,9 @@
 "use client";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Header from "./componenet/Header";
-import Sidebar from "./componenet/Sidebar";
-import Login from "./componenet/Login";
+import Header from "./component/Header";
+import Sidebar from "./component/Sidebar";
+import Login from "./component/Login";
 import { useState } from "react";
 
 const geistSans = Geist({
@@ -25,8 +25,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {isLoggedIn ? (
           <div className="flex flex-col h-screen">
             <Header />

@@ -23,7 +23,7 @@ const Sidebar = () => {
     {
       id: 1,
       name: "Dashboard",
-      link: "/pages/dashboard", 
+      link: "/pages/dashboard",
       icon: <MdDashboard />,
     },
     {
@@ -40,8 +40,8 @@ const Sidebar = () => {
     },
     {
       id: 4,
-      name: "Clients",
-      link: "/pages/clients",
+      name: "Users",
+      link: "/pages/users",
       icon: <MdPeopleAlt />,
     },
     {
@@ -91,9 +91,7 @@ const Sidebar = () => {
   return (
     <aside
       className="bg-gray-800 text-white h-['100%'] w-64 p-4 "
-      aria-label="Main navigation"
-      
-    >
+      aria-label="Main navigation">
       <h1 className="text-center text-xl font-bold mb-4">Administrator</h1>
 
       <div className="border-b border-gray-700 mb-4" />
@@ -114,8 +112,7 @@ const Sidebar = () => {
                     isActive
                       ? "bg-green-600 text-white"
                       : "hover:bg-gray-700 text-gray-200"
-                  }`}
-                >
+                  }`}>
                   <span className="text-xl" aria-hidden="true">
                     {item.icon}
                   </span>

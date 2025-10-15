@@ -1,5 +1,5 @@
 "use client";
-import { StatusCards } from "@/app/componenet/StatusCards";
+import { StatusCards } from "@/app/component/StatusCards";
 import React, { useState } from "react";
 import { FaWallet, FaChartLine, FaMoneyBillWave } from "react-icons/fa";
 import { FaBell } from "react-icons/fa6";
