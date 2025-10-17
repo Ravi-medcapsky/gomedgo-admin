@@ -1,12 +1,15 @@
 "use client";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { BsFillPersonFill } from "react-icons/bs";
 import { IoIosNotifications } from "react-icons/io";
 
 const Header = () => {
+  const router = useRouter();
+
   const handleProfileClick = () => {
-    alert("Not implemented yet");
+    router.push("/component/adminProfile");
   };
 
   return (
@@ -31,8 +34,7 @@ const Header = () => {
           <button
             onClick={handleProfileClick}
             aria-label="Notifications"
-            className="text-xl bg-blue-500 p-2 rounded-full text-white hover:bg-blue-600 transition"
-          >
+            className="text-xl bg-blue-500 p-2 rounded-full text-white hover:bg-blue-600 transition">
             <IoIosNotifications />
           </button>
         </li>
@@ -40,8 +42,7 @@ const Header = () => {
           <button
             onClick={handleProfileClick}
             aria-label="Profile"
-            className="text-xl bg-blue-500 p-2 rounded-full text-white hover:bg-blue-600 transition"
-          >
+            className="text-xl bg-blue-500 p-2 rounded-full text-white hover:bg-blue-600 transition">
             <BsFillPersonFill />
           </button>
         </li>

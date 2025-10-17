@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import HeroSection from "@/app/component/HeroSection";
 import { FaPersonCirclePlus } from "react-icons/fa6";
 import { IoPersonSharp } from "react-icons/io5";
+import { useRouter } from "next/navigation";
 
 const Manager = () => {
   const [members, setMembers] = useState([]);
@@ -10,9 +11,9 @@ const Manager = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [loading, setLoading] = useState(true);
-
-  // ✅ Pagination state
   const [currentPage, setCurrentPage] = useState(1);
+
+  const router = useRouter();
   const rowsPerPage = 5;
 
   // ✅ Dummy data (replace with API later)
@@ -21,30 +22,40 @@ const Manager = () => {
       id: 1,
       name: "John Doe",
       email: "john@gmail.com",
+      mobile: 9999999999,
+      role: "Admin",
       status: "Active",
     },
     {
       id: 2,
       name: "Jane Smith",
       email: "jane@gmail.com",
-      status: "Pending",
+      mobile: 9999999999,
+      role: "Manager",
+      status: "Inactive",
     },
     {
       id: 3,
       name: "Raj Patel",
       email: "raj@gmail.com",
-      status: "Inactive",
+      mobile: 9999999999,
+      role: "Support",
+      status: "Active",
     },
     {
       id: 4,
-      name: "Patel",
-      email: "ra@gmail.com",
+      name: "Anita Verma",
+      email: "anita@gmail.com",
+      mobile: 9999999999,
+      role: "Support",
       status: "Inactive",
     },
     {
       id: 5,
-      name: "Sara Khan",
-      email: "sara@gmail.com",
+      name: "Vikas Kumar",
+      email: "vikas@gmail.com",
+      mobile: 9999999999,
+      role: "Manager",
       status: "Active",
     },
   ];
@@ -79,9 +90,10 @@ const Manager = () => {
     }
 
     setFilteredMembers(filtered);
+    setCurrentPage(1);
   }, [searchQuery, statusFilter, members]);
 
-  // Pagination logic
+  // ✅ Pagination
   const totalPages = Math.ceil(filteredMembers.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
   const paginatedData = filteredMembers.slice(
@@ -97,12 +109,24 @@ const Manager = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
 
+  // ✅ Toggle Active/Inactive
+  const handleToggleStatus = (id) => {
+    setMembers((prev) =>
+      prev.map((member) =>
+        member.id === id
+          ? {
+              ...member,
+              status: member.status === "Active" ? "Inactive" : "Active",
+            }
+          : member
+      )
+    );
+  };
+
   return (
     <div className="w-full">
-      {/* Header Section */}
       <HeroSection title="Team Management" title2="Team Management" />
 
-      {/* Main Content */}
       <div className="container mx-auto max-w-[96%] shadow-lg rounded-lg bg-white h-auto mr-auto ml-auto -mt-10 p-6">
         {/* Top Controls */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
@@ -136,13 +160,14 @@ const Manager = () => {
                 <option value="">All</option>
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
-                <option value="Pending">Pending</option>
               </select>
             </label>
           </div>
 
           {/* Add Button */}
-          <button className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200">
+          <button
+            className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200"
+            onClick={() => router.push("/component/createAdmin")}>
             <FaPersonCirclePlus className="text-lg" />
             Add Member
           </button>
@@ -173,10 +198,13 @@ const Manager = () => {
                       Email
                     </th>
                     <th className="py-3 px-5 text-left border-b border-gray-200">
-                      Status
+                      Phone Number
                     </th>
                     <th className="py-3 px-5 text-left border-b border-gray-200">
-                      Created At
+                      Role
+                    </th>
+                    <th className="py-3 px-5 text-left border-b border-gray-200">
+                      Status
                     </th>
                     <th className="py-3 px-5 text-center border-b border-gray-200">
                       Actions
@@ -184,48 +212,55 @@ const Manager = () => {
                   </tr>
                 </thead>
                 <tbody className="text-sm text-gray-700">
-                  {filteredMembers.map((member, i) => (
+                  {paginatedData.map((member, i) => (
                     <tr
                       key={i}
                       className={`${
-                        i % 2 === 0 ? "bg-white" : "bg-gray-100"
+                        i % 2 === 0 ? "bg-white" : "bg-gray-50"
                       } hover:bg-blue-50 transition`}>
                       <td className="py-3 px-5 border-b border-gray-200">
                         {member.id}
                       </td>
-                      <td className="py-3 px-5 border-b border-gray-200">
+                      <td className="py-3 px-5 border-b border-gray-200 font-medium">
                         {member.name}
                       </td>
                       <td className="py-3 px-5 border-b border-gray-200">
                         {member.email}
                       </td>
-
+                      <td className="py-3 px-5 border-b border-gray-200">
+                        {member.mobile}
+                      </td>
+                      <td className="py-3 px-5 border-b border-gray-200">
+                        {member.role}
+                      </td>
                       <td className="py-3 px-5 border-b border-gray-200">
                         <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          className={`px-3 py-1 rounded-full text-xs font-medium ${
                             member.status === "Active"
                               ? "bg-green-100 text-green-700"
-                              : member.status === "Pending"
-                              ? "bg-yellow-100 text-yellow-700"
-                              : "bg-gray-100 text-gray-700"
+                              : "bg-red-100 text-red-700"
                           }`}>
                           {member.status}
                         </span>
                       </td>
-                      <td className="py-3 px-5 border-b border-gray-200">
-                        {member.createdAt || "N/A"}
-                      </td>
                       <td className="py-3 px-5 text-center border-b border-gray-200">
                         <button
-                          className="bg-blue-500 p-2 rounded-full text-white  mr-3"
-                          onClick={() => alert("Not implemented yet!")}>
-                          <IoPersonSharp size={14} />
+                          onClick={() => handleToggleStatus(member.id)}
+                          className={`px-4 py-1 rounded-lg text-white ${
+                            member.status === "Active"
+                              ? "bg-red-600 hover:bg-red-700"
+                              : "bg-green-600 hover:bg-green-700"
+                          }`}>
+                          {member.status === "Active"
+                            ? "Deactivate"
+                            : "Activate"}
                         </button>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+
               {/* Pagination Controls */}
               <div className="flex justify-between items-center mt-4">
                 <button
@@ -246,7 +281,11 @@ const Manager = () => {
                 <button
                   onClick={handleNext}
                   disabled={currentPage === totalPages}
-                  className={`px-4 py-2 rounded-md $ { currentPage === totalPages ? "bg-gray-200 text-gray-500 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"}`}>
+                  className={`px-4 py-2 rounded-md ${
+                    currentPage === totalPages
+                      ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                      : "bg-blue-500 text-white hover:bg-blue-600"
+                  }`}>
                   Next
                 </button>
               </div>

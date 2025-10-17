@@ -17,10 +17,10 @@ const geistMono = Geist_Mono({
 });
 
 export default function RootLayout({ children }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   // Callback to set login state from the Login component
-  const handleLoginSuccess = () => setIsLoggedIn(true);
+  const handleLoginSuccess = () => setIsLoggedIn(false);
 
   return (
     <html lang="en">
