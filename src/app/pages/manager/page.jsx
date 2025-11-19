@@ -206,9 +206,6 @@ const Manager = () => {
                     <th className="py-3 px-5 text-left border-b border-gray-200">
                       Status
                     </th>
-                    <th className="py-3 px-5 text-center border-b border-gray-200">
-                      Actions
-                    </th>
                   </tr>
                 </thead>
                 <tbody className="text-sm text-gray-700">
@@ -230,23 +227,13 @@ const Manager = () => {
                       <td className="py-3 px-5 border-b border-gray-200">
                         {member.mobile}
                       </td>
-                      <td className="py-3 px-5 border-b border-gray-200">
+                      <td className="py-3 px-4 border-b border-gray-200">
                         {member.role}
                       </td>
-                      <td className="py-3 px-5 border-b border-gray-200">
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            member.status === "Active"
-                              ? "bg-green-100 text-green-700"
-                              : "bg-red-100 text-red-700"
-                          }`}>
-                          {member.status}
-                        </span>
-                      </td>
-                      <td className="py-3 px-5 text-center border-b border-gray-200">
+                      <td className="py-3 px-3 text-center border-b border-gray-200">
                         <button
                           onClick={() => handleToggleStatus(member.id)}
-                          className={`px-4 py-1 rounded-lg text-white ${
+                          className={`px-3 py-1 rounded-lg text-white ${
                             member.status === "Active"
                               ? "bg-red-600 hover:bg-red-700"
                               : "bg-green-600 hover:bg-green-700"

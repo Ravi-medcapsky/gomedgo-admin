@@ -1,11 +1,14 @@
 "use client";
 import { StatusCards } from "@/app/component/StatusCards";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { FaWallet, FaChartLine, FaMoneyBillWave } from "react-icons/fa";
 import { FaBell } from "react-icons/fa6";
 
 const Dashboard = () => {
   const [step, setStep] = useState(1);
+
+  const router = useRouter();
 
   const stats = [
     {
@@ -33,6 +36,7 @@ const Dashboard = () => {
       footer: "completed",
       footerNo: "6",
       color: "blue",
+      path: "/pages/provider",
     },
     {
       title: "Active Users",
@@ -41,6 +45,7 @@ const Dashboard = () => {
       footer: "completed",
       footerNo: "6",
       color: "green",
+      path: "/pages/users",
     },
     {
       title: "Revenue",
@@ -73,6 +78,7 @@ const Dashboard = () => {
       footer: "completed",
       footerNo: "6",
       color: "green",
+      path: "/pages/provider",
     },
   ];
 
@@ -173,6 +179,7 @@ const Dashboard = () => {
                 footer={card.footer}
                 footerNo={card.footerNo}
                 color={card.color}
+                onClick={() => router.push(card.path)}
               />
             ))}
           </div>

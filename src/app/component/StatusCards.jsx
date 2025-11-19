@@ -24,12 +24,16 @@ export const StatusCards = ({
   const textColor = colorMap[color] || colorMap.blue;
 
   return (
-    <div className="bg-white p-4  rounded-lg shadow-md mb-6 w-45">
+    <div
+      onClick={onClick}
+      className="bg-white p-4  rounded-lg shadow-md mb-6 w-45">
       {/* Header */}
       <div className="flex items-center mb-4">
         <h2 className="text-gray-700">{title}</h2>
-        <button onClick={onClick} className="text-gray-500 hover:text-gray-700 ml-auto">
-          <BiDotsVerticalRounded size={20}  />
+        <button
+          onClick={onClick}
+          className="text-gray-500 hover:text-gray-700 ml-auto">
+          <BiDotsVerticalRounded size={20} />
         </button>
       </div>
 
