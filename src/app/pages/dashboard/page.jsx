@@ -1,14 +1,50 @@
 "use client";
 import { StatusCards } from "@/app/component/StatusCards";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaWallet, FaChartLine, FaMoneyBillWave } from "react-icons/fa";
 import { FaBell } from "react-icons/fa6";
 
 const Dashboard = () => {
   const [step, setStep] = useState(1);
-
   const router = useRouter();
+
+  const [totalProviders, setTotalProviders] = useState(0);
+  const [totalUsers, setTotalUsers] = useState(0);
+
+  const baseUrl = "https://devapi.medcapsky.com/api/admin";
+
+  // fetch providers
+  const getAllProviders = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/total_provider`);
+      const data = await response.json();
+      setTotalProviders(data.data.count);
+      // console.log("Data Providers:", data.data.data);
+    } catch (error) {
+      console.error("Error fetching total providers:", error);
+    }
+  };
+
+  // fetch users
+  const getAllUsers = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/active_user`);
+      const data = await response.json();
+      setTotalUsers(data.data.count);
+      // console.log("Data Users:", data.data.data);
+    } catch (error) {
+      console.error("Error fetching total users:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await Promise.all([getAllProviders(), getAllUsers()]);
+    };
+
+    fetchData();
+  }, []);
 
   const stats = [
     {
@@ -105,7 +141,7 @@ const Dashboard = () => {
                   Total Users
                 </h2>
                 <p className="text-3xl font-bold pt-2 text-center text-blue-500">
-                  0
+                  {totalUsers}
                 </p>
               </div>
 
@@ -115,7 +151,7 @@ const Dashboard = () => {
                   Total Providers
                 </h2>
                 <p className="text-3xl font-bold pt-2 text-center text-blue-500">
-                  0
+                  {totalProviders}
                 </p>
               </div>
             </div>

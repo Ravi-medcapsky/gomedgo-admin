@@ -1,15 +1,137 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import HeroSection from "../HeroSection";
 import Image from "next/image";
 import logoimg from "../../../../public/logo.png";
+import { cloudinary } from "../../../../lib/cloudinary";
 
 const ProvidersProfile = () => {
   const [step, setStep] = useState(1);
   const [subStep, setSubStep] = useState(1);
   const [orderPage, setOrderPage] = useState(1);
   const [txnPage, setTxnPage] = useState(1);
+
+  const [provider, setProvider] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const [reload, setReload] = useState(false);
+
+  const params = useSearchParams();
+  const id = params.get("id");
+
+  const profilePic = cloudinary(provider?.file_url, 300);
+
+  // FETCH PROVIDER DATA (GLOBAL)
+  const fetchProviderData = async () => {
+    if (!id) return;
+
+    try {
+      setLoading(true);
+
+      const res = await fetch(
+        `https://devapi.medcapsky.com/api/admin/total_provider:?service_provider_id=${id}`,
+        { cache: "no-store" }
+      );
+
+      if (!res.ok) throw new Error("Failed to fetch provider data");
+
+      const data = await res.json();
+      const providerInfo = data?.data[0];
+      console.log("Provider Data:", providerInfo);
+
+      setProvider(providerInfo);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProviderData();
+  }, [id]);
+
+  useEffect(() => {
+    if (reload) fetchProviderData();
+  }, [reload]);
+
+  const fullName = provider
+    ? `${provider.first_name ?? ""} ${provider.last_name ?? ""}`.trim()
+    : "";
+
+  // KYC APPROVAL
+  const approveKyc = async (providerId) => {
+    try {
+      const res = await fetch(
+        `https://devapi.medcapsky.com/api/admin/approveKYC?service_provider_id=${providerId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          cache: "no-store",
+        }
+      );
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        alert(json?.message || "Failed to approve KYC");
+        return;
+      }
+      alert("KYC Successfully Approved!");
+
+      // Refresh provider data
+      setReload((prev) => !prev);
+    } catch (error) {
+      console.log("KYC approval error:", error);
+    }
+  };
+
+  const handleApproveKyc = (providerId) => {
+    if (confirm("Are you sure you want to approve KYC for this provider?")) {
+      approveKyc(providerId);
+    }
+  };
+
+  // KYC REJECTION API CALL
+  const rejectKyc = async (providerId, status_message) => {
+    try {
+      const res = await fetch(
+        `https://devapi.medcapsky.com/api/admin/rejectKYC?service_provider_id=${providerId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status_message }),
+          cache: "no-store",
+        }
+      );
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        alert(json?.message || "Failed to reject KYC");
+        return;
+      }
+      alert("KYC Successfully Rejected!");
+
+      // Refresh provider data
+      setReload((prev) => !prev);
+    } catch (error) {
+      console.error("KYC rejection error:", error);
+      alert("Failed to reject KYC. Server error.");
+    }
+  };
+
+  const handleRejectKyc = async (providerId) => {
+    const reason = prompt("Enter the reason for rejecting KYC:");
+    if (!reason || reason.trim() === "") {
+      alert("Rejection reason is required.");
+      return;
+    }
+    if (confirm("Are you sure you want to reject KYC for this provider?")) {
+      await rejectKyc(providerId, reason.trim());
+    }
+  };
 
   // Dummy Orders Data
   const orders = Array.from({ length: 13 }, (_, i) => ({
@@ -81,29 +203,29 @@ const ProvidersProfile = () => {
             <div className="w-full md:w-1/3 bg-white shadow-lg rounded-lg">
               <div className="text-center py-4">
                 <Image
-                  src={logoimg}
+                  src={profilePic || logoimg}
                   alt="Provider"
                   width={120}
                   height={120}
                   className="mx-auto rounded-full border"
                 />
                 <h3 className="text-md font-semibold text-gray-700 mt-2">
-                  Provider Name
+                  {fullName || "Provider Name"}
                 </h3>
               </div>
 
               <div className="space-y-3 ml-4 mt-4 text-sm mb-4">
                 <div>
                   <p className="font-semibold text-gray-600">Email</p>
-                  <p className="text-gray-400">a@gmail.com</p>
+                  <p className="text-gray-400">{provider?.email}</p>
                 </div>
                 <div>
                   <p className="font-semibold text-gray-600">Phone</p>
-                  <p className="text-gray-400">1234567890</p>
+                  <p className="text-gray-400">{provider?.mobile_no}</p>
                 </div>
                 <div>
                   <p className="font-semibold text-gray-600">Date of Joining</p>
-                  <p className="text-gray-400">00/00/0000</p>
+                  <p className="text-gray-400">{provider?.created_at[0]}</p>
                 </div>
                 <div>
                   <p className="font-semibold text-gray-600">Total Visits</p>
@@ -133,23 +255,43 @@ const ProvidersProfile = () => {
               {subStep === 1 && (
                 <div className="mt-4 text-sm space-y-4">
                   {[
-                    ["Provider ID", "0000000"],
-                    ["Full Name", "ABCD"],
-                    ["State", "UP"],
-                    ["Verified", "Yes"],
+                    ["Provider ID", `${provider?.service_provider_id[0]}`],
+                    ["Full Name", fullName],
+                    ["State", provider?.state ?? "N/A"],
+                    ["KYC Verified", provider?.kyc_status ?? "N/A"],
+                    ["Status", provider?.active_status ?? "N/A"],
                   ].map(([label, value]) => (
                     <div key={label} className="flex justify-between">
                       <h5 className="font-semibold">{label}</h5>
                       <p className="text-gray-700">{value}</p>
                     </div>
                   ))}
-                  <div className="flex justify-between items-center">
+
+                  {provider?.kyc_status === "pending" && (
+                    <div className="flex mt-4 gap-4 ">
+                      <button
+                        className="bg-green-500 p-2 rounded-full text-white hover:bg-green-600"
+                        onClick={() =>
+                          handleApproveKyc(provider?.service_provider_id[0])
+                        }>
+                        Approve KYC
+                      </button>
+                      <button
+                        className="bg-red-500 p-2 rounded-full text-white hover:bg-red-600"
+                        onClick={() =>
+                          handleRejectKyc(provider?.service_provider_id[0])
+                        }>
+                        Reject KYC
+                      </button>
+                    </div>
+                  )}
+                  {/* <div className="flex justify-between items-center">
                     <h5 className="font-semibold">Status</h5>
                     <select className="border rounded px-2 py-1 text-sm">
                       <option>Active</option>
                       <option>Inactive</option>
                     </select>
-                  </div>
+                  </div> */}
                 </div>
               )}
 
